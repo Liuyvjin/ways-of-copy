@@ -1,6 +1,10 @@
-//创建两个进程，一个读取文件，一个写入文件，通过exec交流
-//刘琎
-//2019/3/20
+/************************************************
+*@file  	write_to_file.c
+*@brief    将指定字符串写入指定文件中
+ *         write_to_file fileName str
+*@author   刘琎    516020910128
+*@date     2019/3/20
+************************************************/
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -31,7 +35,7 @@ int main(int argc, char** argv)
 	int  des_fd;
 
 	//打开写入文件
-	des_fd = open(des_path, O_RDWR|O_CREAT|O_TRUNC, DEF_MODE);
+	des_fd = open(des_path, O_RDWR|O_CREAT|O_APPEND, DEF_MODE);
 	if(des_fd == -1)
 		sys_err("open file fail");
 		

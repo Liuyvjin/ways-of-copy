@@ -1,19 +1,23 @@
-//编写函数mycopy实现复制一个文件功能，并在主程序调用
-//调用参数：源文件名，目标文件名
-//刘琎
-//2019/3/20
-
+/**********************************************
+*@file	   MyCopy.c
+*@brief     使用system calls，实现通过./MyCopy srcFile DesFile 将
+*                srcCopy 复制到 DesFile 中
+*@author   刘琎 516020910128
+*@date       2019/3/20
+***********************************************/
 #include<stdio.h>
 #include<fcntl.h>
 #include<stdlib.h>
 #include<unistd.h>
 
-#define MAX_SIZE 10
+#define MAX_SIZE 100
 #define DEF_MODE S_IRUSR|S_IWUSR
 
-//复制函数
-//param src_fd: 源文件标识符
-//param des_fd: 目标文件标识符
+/**
+*@brief    复制函数
+*@param src_fd: 源文件标识符
+*@param des_fd: 目标文件标识符
+*/
 int copy(int src_fd, int des_fd)
 {
 	char buff[MAX_SIZE];
@@ -39,7 +43,7 @@ int main(int argc, char **argv)
 	char const *des_path = argv[2];
 	int src_fd, des_fd;
 
-	//打开文件
+	//打开源文件
 	src_fd = open(src_path, O_RDONLY);
 	if(src_fd == -1)//检查是否出错
 	{
@@ -55,8 +59,8 @@ int main(int argc, char **argv)
 	}
 
 	//复制文件
-	copy(src_fd, des_fd);	
-	printf("Done!\n");
+	if( !copy(src_fd, des_fd) )	
+		printf("copy success!\n");
 
 	//关闭文件
 	close(src_fd);
