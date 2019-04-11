@@ -1,12 +1,20 @@
-//简单的shell可以执行含参数指令,并且实现管道功能，管道符前后要留有空格如 "ls | wc"
-//使用了《深入理解计算机系统》中的库<csapp.h>，因此编译时需要加上-lpthread
-//如gcc -o DupShell DupShell.c -lpthread
-//刘琎
-//2019/3/25
+/************************************************
+*@file  	DupShell.c
+*@brief     简单的shell可以执行含参数指令,并且实现管道功能，
+*          管道符前后要留有空格如 "ls | wc"
+*@note     由于使用了《深入理解计算机系统》提供的库<csapp.h>，
+*          因此编译时需要加上-lpthread和csapp.c例如：
+*          gcc -o DupShell DupShell.c include/csapp.c -lpthread
+*@author   刘琎    516020910128
+*@date     2019/3/25
+************************************************/
 #include<pwd.h>
-#include <csapp.h>
+#include "include/csapp.h"
 #define MAXARGS 128
-/*函数原型*/
+
+/**
+ * 函数原型
+ */
 void Parse(char* input, char* output[]);
 void type_prompt();
 void ParseArg(char* input, char* output[]); 
@@ -15,6 +23,9 @@ int IsPipe(char* argv[]);  //判断指令是否包含管道
 void ParsePipe(char* input[], char* output1[],char* output2[]);//用于将input按照|进行切分，最后一个后面为当前路径
 void ExecvPipe(char* argv1[],char* argv2[]);
 
+/**
+ * 主程序
+ */
 int main()
 {
     while(1)

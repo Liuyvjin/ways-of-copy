@@ -1,28 +1,45 @@
-//使用套接字复制文件，用fork创建两个进程，其中一个读入源文件，另一个写入文件
-//由于使用了《深入理解计算机系统》提供的库<csapp.h>，因此编译时需要加上-lpthread
-//如gcc -o SockCopy SockCopy.c -lpthread
-//刘琎
-//2019/3/22
-#include <csapp.h>
+/************************************************
+*@file  	SockCopy.c
+*@brief     创建两个进程，一个读取文件，另一个写入文件，通过
+*           Socket交流
+*@note     由于使用了《深入理解计算机系统》提供的库<csapp.h>，
+*          因此编译时需要加上-lpthread，例如：
+*          gcc -o SockCopy SockCopy.c -lpthread
+*@author   刘琎    516020910128
+*@date     2019/3/20
+************************************************/
+
+#include "include/csapp.h"
 #include <sys/un.h>
 #define MAX_SIZE 50
 #define UNIX_DOMAIN "/tmp/UNIX.domain"
 
-int flag = 0;
+
+/**
+ * @brief 输出错误信息
+ * @param str 输出的信息
+ */
 void sys_err(const char *str)
 {
     perror(str);
     exit(1);
 }
-void sigusr1_handler(int sig){;}//服务器准备完毕，通知客户端进程
 
+/**
+ * @brief 服务器准备完毕告知客户端开始工作
+ */
+void sigusr1_handler(int sig){printf("Client: get to start\n");}//服务器准备完毕，通知客户端进程
+
+/**
+ * @brief 主函数
+ */
 int main(int argc, char **argv)
 {
 	char const *src_path = argv[1];
 	char const *des_path = argv[2];
 	int src_fd;
 	int des_fd;
-	
+
 	if(signal(SIGUSR1, sigusr1_handler) == SIG_ERR)
 			sys_err("signal error");
 			
@@ -32,6 +49,7 @@ int main(int argc, char **argv)
 		sys_err("pipe error");
 	else if(pid == 0)//客户端,写入数据
 	{
+        printf("Client: I am waiting...\n");
 		pause();//等待服务器准备
 		int connect_fd;
 		struct sockaddr_un srv_addr;
@@ -75,9 +93,6 @@ int main(int argc, char **argv)
 			write(des_fd,rcv_buf,rcv_num);
 			sleep(0.5);
 		}
-
-		close(connect_fd);
-		return 0;
 	}
 	
 	else//服务端，读入数据
@@ -130,6 +145,7 @@ int main(int argc, char **argv)
 		clt_len = sizeof(clt_addr);
 		//服务器启动成功
 		printf("Server: start success\n");
+		sleep(1);
 		kill(pid, SIGUSR1);
 		//读取文件并传给客户端
 		while(1)
