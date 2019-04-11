@@ -1,6 +1,6 @@
 /************************************************
 *@file  	MoreShell.c
-*@brief     简单的shell可以执行无参数指令，若执行含参数指令会报错
+*@brief     简单的shell可以执行含有参数指令
 *@note     由于使用了《深入理解计算机系统》提供的库<csapp.h>，
 *          因此编译时需要加上-lpthread和csapp.c例如：
 *          gcc -o MoreShell MoreShell.c include/csapp.c -lpthread
